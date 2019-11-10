@@ -6,8 +6,7 @@ import random
 
 def lyric_collecter(link) -> dict:
     """
-    Gets the most recent tweets of a certain twitter profile to collect
-    possible tweets from
+    Gets all the lyrics from a song and returns a dictionary version of them
     """
     all_lyrics = []
     f = urllib.request.urlopen(link)
@@ -17,7 +16,7 @@ def lyric_collecter(link) -> dict:
         if text in lines:
             while  b'</div>\r\n' not in sentence:
                 sentence = f.readline()
-                if b'[' not in sentence or b']' not in sentence and b'xe' not in sentence:
+                if b'[' not in sentence and b']' not in sentence and b'xe' not in sentence:
                     if str(sentence)[2:-7].replace('\\','').replace('<b>','') != '':
                         all_lyrics.append(str(sentence)[2:-7].replace('\\','').replace(')','').replace('<i>','').
                                           replace('<i>[English Translation: ','').replace('xe2x80x99','\'').\
@@ -27,8 +26,7 @@ def lyric_collecter(link) -> dict:
         
 def make_dictionary(lyrics) -> Dict[str, List[str]]:
     """
-    Creates a dictionary with all the words in the recent feed of some
-    Twitter feed
+    Creates a dictionary with all the words in a given song
     """
     new = []
     all_words = {'': []}
@@ -48,7 +46,7 @@ def make_dictionary(lyrics) -> Dict[str, List[str]]:
 def artist_mimc(word_dict: Dict[str, List[str]]) -> str:
     """
     Goes through a dictionary of random words and formulates a sentece
-    based on usage in tweets
+    based on usage in the song
     """
     current_word = ''
     sentence = ''
@@ -61,6 +59,9 @@ def artist_mimc(word_dict: Dict[str, List[str]]) -> str:
 
 
 def song_maker(word_dict, num_of_line):
+    """
+    Creates a random song based on common sentence structure and word usage
+    """
     song = ''
     for sentence in range(num_of_line):
         song += str(artist_mimc(word_dict)) + '\n'
